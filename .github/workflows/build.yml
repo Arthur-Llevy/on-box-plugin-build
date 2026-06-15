@@ -37,9 +37,12 @@ jobs:
 
     - name: Criar estrutura do bundle (OnboxApp.bundle)
       run: |
-        if not exist "OnboxApp.bundle\Contents\2023\ONBOX" mkdir "OnboxApp.bundle\Contents\2023\ONBOX"
-        xcopy "ONBOXApp\bin\x64\Release2023\*" "OnboxApp.bundle\Contents\2023\ONBOX\" /Y /R /F /I /S
-        copy "ONBOXApp.addin" "OnboxApp.bundle\Contents\2023\"
+        $bundlePath = "OnboxApp.bundle\Contents\2023\ONBOX"
+        if (-not (Test-Path $bundlePath)) {
+            New-Item -ItemType Directory -Path $bundlePath -Force
+        }
+        Copy-Item -Path "ONBOXApp\bin\x64\Release2023\*" -Destination $bundlePath -Recurse -Force
+        Copy-Item -Path "ONBOXApp.addin" -Destination "OnboxApp.bundle\Contents\2023\"
 
     - name: Fazer upload do bundle compilado
       uses: actions/upload-artifact@v4
