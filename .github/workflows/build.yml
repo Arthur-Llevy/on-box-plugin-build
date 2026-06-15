@@ -1,35 +1,49 @@
-name: Compilar Plugin Revit
+name: Compilar Onbox para Revit 2023
 
-on: [push]
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:   # permite execução manual
 
 jobs:
   build:
     runs-on: windows-latest
 
     steps:
-    - name: Baixar o código
+    - name: Baixar o código fonte
       uses: actions/checkout@v4
 
     - name: Configurar MSBuild
       uses: microsoft/setup-msbuild@v1
 
-    - name: Restaurar pacotes NuGet (se houver packages.config)
+    - name: Restaurar pacotes NuGet da solução
       run: nuget restore ONBOXApp.sln
 
     - name: Instalar pacote Revit API (contém RevitAPI.dll e RevitAPIUI.dll)
       run: |
         nuget install Revit_All_Main_Versions_API_x64 -Version 2023.0.0 -OutputDirectory packages
 
-    - name: Copiar DLLs para a raiz do projeto
+    - name: Copiar DLLs do Revit para a raiz do projeto
       run: |
         copy packages\Revit_All_Main_Versions_API_x64.2023.0.0\lib\net48\RevitAPI.dll .
         copy packages\Revit_All_Main_Versions_API_x64.2023.0.0\lib\net48\RevitAPIUI.dll .
 
-    - name: Compilar a solução
-      run: msbuild ONBOXApp.sln /p:Configuration=Release /p:Platform="Any CPU"
+    - name: Compilar para Revit 2023 (Release)
+      run: msbuild ONBOXApp.sln /p:Configuration=Release2023 /p:Platform=x64 /p:OutputPath=bin\x64\Release2023\
 
-    - name: Fazer upload do plugin compilado
+    - name: Listar arquivos gerados (debug)
+      run: dir bin\x64\Release2023\
+
+    - name: Criar estrutura do bundle (OnboxApp.bundle)
+      run: |
+        if not exist "OnboxApp.bundle\Contents\2023\ONBOX" mkdir "OnboxApp.bundle\Contents\2023\ONBOX"
+        xcopy "bin\x64\Release2023\*" "OnboxApp.bundle\Contents\2023\ONBOX\" /Y /R /F /I /S
+        copy "ONBOXApp.addin" "OnboxApp.bundle\Contents\2023\"
+
+    - name: Fazer upload do bundle compilado
       uses: actions/upload-artifact@v4
       with:
-        name: OnboxApp.bundle
-        path: bin\Release\OnboxApp.bundle
+        name: OnboxApp_Revit2023
+        path: OnboxApp.bundle
