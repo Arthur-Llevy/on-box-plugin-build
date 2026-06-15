@@ -5,13 +5,33 @@ on: [push]
 jobs:
   build:
     runs-on: windows-latest
+
     steps:
     - name: Baixar o código
       uses: actions/checkout@v4
-    - name: Configurar o MSBuild
+
+    - name: Configurar MSBuild
       uses: microsoft/setup-msbuild@v1
-    - name: Compilar a Solução
-      run: msbuild ONBOXApp.sln /p:Configuration=Release
+
+    # 👇 Etapa nova: restaurar pacotes NuGet (se houver packages.config)
+    - name: Restaurar pacotes NuGet
+      run: nuget restore ONBOXApp.sln
+
+    # 👇 Etapa nova: adicionar as referências do Revit via NuGet
+    - name: Adicionar pacotes Revit API
+      run: |
+        nuget install Revit_All_Main_Versions_API_x64 -Version 2023.0.0 -OutputDirectory packages
+        nuget install RevitAPIUI -Version 2023.0.0 -OutputDirectory packages
+
+    # 👇 Opcional: copiar as DLLs para uma pasta conhecida (se o projeto esperar caminhos fixos)
+    - name: Copiar DLLs para o projeto
+      run: |
+        copy packages\Revit_All_Main_Versions_API_x64.2023.0.0\lib\net48\RevitAPI.dll .
+        copy packages\RevitAPIUI.2023.0.0\lib\net48\RevitAPIUI.dll .
+
+    - name: Compilar a solução
+      run: msbuild ONBOXApp.sln /p:Configuration=Release /p:Platform="Any CPU"
+
     - name: Fazer upload do plugin compilado
       uses: actions/upload-artifact@v4
       with:
