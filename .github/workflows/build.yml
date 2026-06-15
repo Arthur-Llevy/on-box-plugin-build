@@ -23,24 +23,24 @@ jobs:
       run: |
         nuget install Revit_All_Main_Versions_API_x64 -Version 2023.0.0 -OutputDirectory packages
 
-    - name: Copiar DLLs do Revit para a raiz do projeto
+    - name: Copiar DLLs do Revit para a pasta do projeto
       run: |
-        copy packages\Revit_All_Main_Versions_API_x64.2023.0.0\lib\net48\RevitAPI.dll .
-        copy packages\Revit_All_Main_Versions_API_x64.2023.0.0\lib\net48\RevitAPIUI.dll .
+        copy packages\Revit_All_Main_Versions_API_x64.2023.0.0\lib\net48\RevitAPI.dll ONBOXApp\
+        copy packages\Revit_All_Main_Versions_API_x64.2023.0.0\lib\net48\RevitAPIUI.dll ONBOXApp\
 
     - name: Compilar para Revit 2023 (Release)
-      run: msbuild ONBOXApp.csproj /p:Configuration=Release2023 /p:Platform="Any CPU" /p:OutputPath=bin\Release2023\
+      run: msbuild ONBOXApp\ONBOXApp.csproj /p:Configuration=Release2023 /p:Platform=x64 /p:OutputPath=bin\x64\Release2023\
 
     - name: Listar arquivos gerados (debug)
-      run: dir bin\Release2023\
+      run: dir ONBOXApp\bin\x64\Release2023\
 
-    - name: Criar estrutura do bundle
+    - name: Criar estrutura do bundle (OnboxApp.bundle)
       run: |
         if not exist "OnboxApp.bundle\Contents\2023\ONBOX" mkdir "OnboxApp.bundle\Contents\2023\ONBOX"
-        xcopy "bin\Release2023\*" "OnboxApp.bundle\Contents\2023\ONBOX\" /Y /R /F /I /S
+        xcopy "ONBOXApp\bin\x64\Release2023\*" "OnboxApp.bundle\Contents\2023\ONBOX\" /Y /R /F /I /S
         copy "ONBOXApp.addin" "OnboxApp.bundle\Contents\2023\"
 
-    - name: Fazer upload do bundle
+    - name: Fazer upload do bundle compilado
       uses: actions/upload-artifact@v4
       with:
         name: OnboxApp_Revit2023
