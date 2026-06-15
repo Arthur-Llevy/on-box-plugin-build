@@ -42,7 +42,7 @@ jobs:
             New-Item -ItemType Directory -Path $bundlePath -Force
         }
         Copy-Item -Path "ONBOXApp\bin\x64\Release2023\*" -Destination $bundlePath -Recurse -Force
-        Copy-Item -Path "ONBOXApp.addin" -Destination "OnboxApp.bundle\Contents\2023\"
+        Copy-Item -Path "ONBOXApp\ONBOXApp.addin" -Destination "OnboxApp.bundle\Contents\2023\"
 
     - name: Fazer upload do bundle compilado
       uses: actions/upload-artifact@v4
