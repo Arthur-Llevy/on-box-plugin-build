@@ -210,19 +210,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)' == 'Debug2023' OR '$(Configuration)' == 'Release2023'">
-    <Reference Include="RevitAPI">
-      <HintPath>C:\Program Files\Autodesk\Revit 2023\RevitAPI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="RevitAPIUI">
-      <HintPath>C:\Program Files\Autodesk\Revit 2023\RevitAPIUI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="RevitAPIIFC">
-      <HintPath>C:\Program Files\Autodesk\Revit 2023\RevitAPIIFC.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-  </ItemGroup>
+  <Reference Include="RevitAPI">
+    <HintPath>RevitAPI.dll</HintPath>
+    <Private>False</Private>
+  </Reference>
+  <Reference Include="RevitAPIUI">
+    <HintPath>RevitAPIUI.dll</HintPath>
+    <Private>False</Private>
+  </Reference>
+  <Reference Include="RevitAPIIFC">
+    <HintPath>RevitAPIIFC.dll</HintPath>
+    <Private>False</Private>
+  </Reference>
+</ItemGroup>
   <ItemGroup Condition="'$(Configuration)' == 'Debug2024' OR '$(Configuration)' == 'Release2024'">
     <Reference Include="RevitAPI">
       <HintPath>C:\Program Files\Autodesk\Revit 2024\RevitAPI.dll</HintPath>

@@ -13,21 +13,17 @@ jobs:
     - name: Configurar MSBuild
       uses: microsoft/setup-msbuild@v1
 
-    # 👇 Etapa nova: restaurar pacotes NuGet (se houver packages.config)
-    - name: Restaurar pacotes NuGet
+    - name: Restaurar pacotes NuGet (se houver packages.config)
       run: nuget restore ONBOXApp.sln
 
-    # 👇 Etapa nova: adicionar as referências do Revit via NuGet
-    - name: Adicionar pacotes Revit API
+    - name: Instalar pacote Revit API (contém RevitAPI.dll e RevitAPIUI.dll)
       run: |
         nuget install Revit_All_Main_Versions_API_x64 -Version 2023.0.0 -OutputDirectory packages
-        nuget install RevitAPIUI -Version 2023.0.0 -OutputDirectory packages
 
-    # 👇 Opcional: copiar as DLLs para uma pasta conhecida (se o projeto esperar caminhos fixos)
-    - name: Copiar DLLs para o projeto
+    - name: Copiar DLLs para a raiz do projeto
       run: |
         copy packages\Revit_All_Main_Versions_API_x64.2023.0.0\lib\net48\RevitAPI.dll .
-        copy packages\RevitAPIUI.2023.0.0\lib\net48\RevitAPIUI.dll .
+        copy packages\Revit_All_Main_Versions_API_x64.2023.0.0\lib\net48\RevitAPIUI.dll .
 
     - name: Compilar a solução
       run: msbuild ONBOXApp.sln /p:Configuration=Release /p:Platform="Any CPU"
