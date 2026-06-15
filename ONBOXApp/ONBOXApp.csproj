@@ -209,7 +209,7 @@
       <Private>False</Private>
     </Reference>
   </ItemGroup>
-  <ItemGroup Condition="'$(Configuration)' == 'Debug2023' OR '$(Configuration)' == 'Release2023'">
+<ItemGroup Condition="'$(Configuration)' == 'Debug2023' OR '$(Configuration)' == 'Release2023'">
   <Reference Include="RevitAPI">
     <HintPath>RevitAPI.dll</HintPath>
     <Private>False</Private>
@@ -218,13 +218,10 @@
     <HintPath>RevitAPIUI.dll</HintPath>
     <Private>False</Private>
   </Reference>
-  <!-- Remova as três linhas abaixo (RevitAPIIFC) -->
-  <!--
   <Reference Include="RevitAPIIFC">
     <HintPath>RevitAPIIFC.dll</HintPath>
     <Private>False</Private>
   </Reference>
-  -->
 </ItemGroup>
   <ItemGroup Condition="'$(Configuration)' == 'Debug2024' OR '$(Configuration)' == 'Release2024'">
     <Reference Include="RevitAPI">
